@@ -5,11 +5,13 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
+import Header from "./components/Header";
 export default function App(){
   return(
 
       <div>
         
+         <Header/>
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/about" element={<About/>}/>
