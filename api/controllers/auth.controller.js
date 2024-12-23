@@ -9,7 +9,7 @@ export const signup = async(req,res,next)=>{
     try{
         await newUser.save(); // save it inside  a database 
         res.status(201).json({
-            message:"Signup successfully",
+            message:"Signup  successfully",
         });
 
     }
