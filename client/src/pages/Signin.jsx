@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
 import {Link }from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+// ye bhi redux ka part hai dispatch
+import { useDispatch, useSelector } from 'react-redux';
+import { signInStart,signInFailure,signInSuccess } from '../redux/user/userSlice';
+
+
 export default function Signin() {
  
   const [formData,setformData] = useState({});
-   const [error,setError]= useState(null);
-   const [loading,setloading]=useState(false);
+  //  const [error,setError]= useState(null);
+  //  const [loading,setloading]=useState(false);
+  const {loading,error} = useSelector((state)=>state.user);
+  // isme user vo hai jo name createslice mai name rakha tha
    const navigate = useNavigate();
+   // dispatch redux ka part hai'
+
+   const dispatch = useDispatch();
+
   const handleChange=(e)=>{
 
      setformData(
@@ -23,7 +34,9 @@ export default function Signin() {
      e.preventDefault();
 
      try{
-      setloading(true);
+
+      // setloading(true); iski jagah redux use karenge
+      dispatch(signInStart());
      const res = await fetch('/api/auth/signin',{
       method:'POST',
       headers:{
@@ -35,22 +48,27 @@ export default function Signin() {
       // loading
      const data = await res.json();
      if(data.success===false){
-      setloading(false);
-      setError(data.message);
-    
+      // setloading(false);
+      // setError(data.message);
+      // in this place redux is use
+      dispatch(signInFailure(data.message));
       return;
      }
 
 // loading
-      setloading(false);
-      setError(null);
+      // setloading(false);
+      // setError(null);
+      // yha bhi redux is use
+      dispatch(signInSuccess(data));
      console.log(data);
      navigate('/');
 
      }
      catch(error){
-      setloading(false);
-      setError(error.message);
+      // setloading(false);
+      // setError(error.message);
+      // yha bhi redux use
+      dispatch(signInFailure(error.message));
      }
      
 
