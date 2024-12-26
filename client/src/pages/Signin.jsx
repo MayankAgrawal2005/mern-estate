@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 // ye bhi redux ka part hai dispatch
 import { useDispatch, useSelector } from 'react-redux';
 import { signInStart,signInFailure,signInSuccess } from '../redux/user/userSlice';
-
+import { OAuth } from '../components/OAuth';
 
 export default function Signin() {
  
@@ -91,6 +91,8 @@ console.log(formData);
        uppercase hover:opacity-95 disabled:opacity-80'>
       {loading ? 'Loading...': 'Sign In'}
        </button>
+
+       <OAuth/>
 
  </form>
  <div className='flex gap-2 mt-5'>
