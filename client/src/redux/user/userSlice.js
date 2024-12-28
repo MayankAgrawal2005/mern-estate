@@ -17,8 +17,9 @@ const userSlice =createSlice({
             state.loading=true;
             // action we get from database
         },signInSuccess:(state,action)=>{
+            console.log('Reducer received payload:', action.payload);
             state.currentUser=action.payload;
-            state.loading=false,
+            state.loading=false;
             state.error=null;
         },
         signInFailure:(state,action)=>{

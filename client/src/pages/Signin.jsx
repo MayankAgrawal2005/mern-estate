@@ -47,6 +47,7 @@ export default function Signin() {
 
       // loading
      const data = await res.json();
+     console.log("data is ",data);
      if(data.success===false){
       // setloading(false);
       // setError(data.message);
