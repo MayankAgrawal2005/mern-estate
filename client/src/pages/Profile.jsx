@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { updateUserFailure,updateUserSuccess,updateUserStart,
    deleteUserFailure,deleteUserStart,deleteUserSuccess,
@@ -126,9 +127,13 @@ const handleSubmit= async(e)=>{
     
     <button disabled={loading} className='bg-slate-700 p-3 uppercase text-white hover:opacity-95 disabled:opacity-80'>{loading ? 'Loading...':'Update'}</button>
 
-
+     <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95 ' to={"/create-listing"}>
+      Create Lising
+     </Link>
 
       </form>
+
+
 
       <div className='flex justify-between mt-5'>
         <span onClick={handleDelete} className='text-red-700 cursor-pointer'>Delete Account</span>
