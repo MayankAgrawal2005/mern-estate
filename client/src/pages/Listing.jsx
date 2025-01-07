@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom'
 import { Swiper,SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
 import { Navigation } from 'swiper/modules';
+import { useSelector } from 'react-redux';
+import { Contact } from '../components/Contact';
 import 'swiper/css/bundle';
 import {
     FaBath,
@@ -23,6 +25,12 @@ export const Listing = () => {
     const [error,setError]=useState(false);
     const [copied, setCopied] = useState(false);
     const [contact, setContact] = useState(false);
+    const{ currentUser} = useSelector((state)=>state.user);
+   
+
+
+    // console.log("CurrentUser is ",currentUser._id);
+    // console.log("Current lister creator is",listing.userRef);
 
     useEffect(()=>{
 
@@ -52,6 +60,9 @@ export const Listing = () => {
         fetchListing();
 
     },[params.listingId])
+
+    //     console.log("CurrentUser is ",currentUser._id);
+    // console.log("Current lister creator is",listing.userRef);
   return (
     <main>
       {loading && <p className='text-center my-7 text-2xl'> Loading...</p>}
@@ -148,8 +159,22 @@ export const Listing = () => {
                 {listing.furnished ? 'Furnished' : 'Unfurnished'}
               </li>
             </ul>
+
+          {currentUser && listing.userRef!=currentUser._id && !contact &&
+          
+          (
+
+            <button onClick={()=>setContact(true)} className='bg-slate-700 uppercase hover:opacity-95
+             text-white rounded-lg p-3 '>Contact landlord</button>
+          )}
+
+
+     { contact && <Contact listing={listing}/> }
+
+            
               
        </div>
+
 
        
   
