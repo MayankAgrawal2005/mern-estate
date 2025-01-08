@@ -1,4 +1,5 @@
 import React from "react";
+import { Search } from "./pages/Search";
 import {Routes,Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Signin from "./pages/Signin";
@@ -21,6 +22,7 @@ export default function App(){
           <Route path="/about" element={<About/>}/>
           <Route path="/listing/:listingId" element={<Listing/>}/>
          
+          <Route path="/search" element={<Search/>}/>
           <Route path="/sign-in" element={<Signin/>}/>
           <Route path="/sign-up" element={<Signup/>}/>
 
