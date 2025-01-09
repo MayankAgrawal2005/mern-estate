@@ -229,12 +229,12 @@ export const Search = () => {
 <label>Sort:</label>
 <select  onChange={handleChange}  id='sort_order'
  className='border rounded-lg p-3'
- defaultValue={'created-at_desc'}
+ defaultValue={'created_at_desc'}
  >
     <option value='regularPrice_desc'>Price high to low</option>
     <option value='regularPrice_asc'>Price low to high</option>
-    <option value='created_At_desc'>Latest</option>
-    <option value='created_At_asc'>Oldest</option>
+    <option value='createdAt_desc'>Latest</option>
+    <option value='createdAt_asc'>Oldest</option>
 </select>
 
 </div>
