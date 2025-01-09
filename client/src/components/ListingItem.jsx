@@ -7,7 +7,7 @@ export const ListingItem = ({listing}) => {
 
 
     <div className='bg-white shadow-md hover:shadow-lg 
-    transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px] '>
+    transition-shadow overflow-hidden rounded-lg w-full  sm:w-[330px] '>
     
     <Link to={`/listing/${listing._id}`}>
     
