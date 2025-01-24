@@ -110,6 +110,7 @@ if(offer===undefined || offer==='false'){
 }
 
 
+
 let furnished = req.query.furnished;
 if(furnished===undefined || furnished==='false'){
 
@@ -131,6 +132,7 @@ let type = req.query.type;
 if(type ===undefined || type === 'all'){
     type={$in:['sale','rent']};
 }
+
 
 const searchTerm = req.query.searchTerm || '';
 

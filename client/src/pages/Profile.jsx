@@ -12,10 +12,11 @@ export default function Profile() {
   const fileref = useRef(null);
   const [formData,setFormData] = useState({});
   const [updateSuccess,setUpdateSuccess] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState(currentUser?.avatar || "");
   const [showListingsError,setShowListingsError]=useState(false);
   const dispatch = useDispatch();
   const [userListings,setUserListings]=useState([]);
-  console.log(formData)
+  console.log("currentUser is ",currentUser);
 
 const handleChange = (e)=>{
 
@@ -23,12 +24,59 @@ const handleChange = (e)=>{
 
 }
 
+
+const handleImageChange = async (e) => {
+  const file = e.target.files[0];
+
+  if (file) {
+   
+    // Set up a FormData object to send to the Cloudinary API
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'mayank'); 
+    formData.append("cloud_name", "diqum6tfd");
+
+    try {
+      // Upload the image to Cloudinary
+      const res = await fetch("https://api.cloudinary.com/v1_1/diqum6tfd/image/upload", {
+        method: 'POST',
+        body: formData,
+      });
+
+      // Parse the JSON response
+      const data = await res.json();
+
+      // Check if the secure_url is available in the response
+      if (data.secure_url) {
+        const imageUrl = data.secure_url;  // The URL of the uploaded image
+
+        // Update the formData with the image URL
+        setFormData((prev) => ({
+          ...prev,
+          avatar: imageUrl,  // Save the Cloudinary URL
+        }));
+
+        // Update the preview with the Cloudinary URL
+        setAvatarPreview(imageUrl);
+      } else {
+        console.error("Cloudinary upload failed, secure_url is missing in the response");
+      }
+    } catch (error) {
+      console.error("Error uploading image to Cloudinary:", error);
+    }
+  }
+};
 const handleSubmit= async(e)=>{
 
   e.preventDefault();
+
+  
+
   try{
 
     dispatch(updateUserStart());
+
+    
     const res = await fetch(`/api/user/update/${currentUser._id}`,{
     method:'POST',
       headers:{
@@ -158,9 +206,9 @@ const handleListingDelete = async(listingId)=>{
       <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
 
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-      <input type='file' ref={fileref} hidden accept='image/*'/>
+      <input type='file' ref={fileref} onChange={handleImageChange} hidden accept='image/*'/>
 
-    <img onClick={()=>fileref.current.click()} src={ formData?.avatara || currentUser.avatar} alt="profile"
+    <img onClick={()=>fileref.current.click()} src={ avatarPreview} alt="profile"
        className='rounded-full h-24 w-24 object-cover
        mt-2 self-center cursor-pointer'
     />
@@ -176,7 +224,7 @@ const handleListingDelete = async(listingId)=>{
     <input type='password' placeholder='password' id='password'
      onChange={handleChange} className=' border p-3 rounded-lg '/>
     
-    <button disabled={loading} className='bg-slate-700 p-3 uppercase text-white hover:opacity-95 disabled:opacity-80'>{loading ? 'Loading...':'Update'}</button>
+    <button disabled={loading} className='bg-slate-700 p-3 uppercase text-white hover:opacity-95 disabled:opacity-80'>{loading ? 'Updating...':'Update'}</button>
 
      <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95 ' to={"/create-listing"}>
       Create Lising
