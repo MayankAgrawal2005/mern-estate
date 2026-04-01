@@ -91,108 +91,109 @@ export const Search = () => {
   };
 
   return (
+    
     <div className="flex flex-col md:flex-row bg-gray-50 min-h-screen">
 
-      {/* 🔥 FILTER PANEL */}
-      <div className="md:w-80 bg-white p-6 shadow-lg">
+  {/* 🔥 FILTER PANEL */}
+  <div className="w-full md:w-80 bg-white p-4 sm:p-6 shadow-lg">
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-6">
 
-          {/* SEARCH */}
-          <input
-            type="text"
-            id="searchTerm"
-            value={sidebardata.searchTerm}
-            onChange={handleChange}
-            placeholder="🔍 Search properties..."
-            className="border p-3 rounded-lg"
-          />
+      {/* SEARCH */}
+      <input
+        type="text"
+        id="searchTerm"
+        value={sidebardata.searchTerm}
+        onChange={handleChange}
+        placeholder="🔍 Search properties..."
+        className="border p-2.5 sm:p-3 rounded-lg text-sm sm:text-base"
+      />
 
-          {/* TYPE BUTTONS */}
-          <div className="flex gap-2 flex-wrap">
-            {['all', 'rent', 'sale'].map((type) => (
-              <button
-                key={type}
-                type="button"
-                onClick={() => setSidebardata({ ...sidebardata, type })}
-                className={`px-4 py-2 rounded-full border ${
-                  sidebardata.type === type
-                    ? 'bg-blue-600 text-white'
-                    : ''
-                }`}
-              >
-                {type}
-              </button>
-            ))}
-          </div>
-
-          {/* AMENITIES */}
-          <div className="flex flex-wrap gap-4 text-sm">
-            {['parking', 'furnished', 'offer'].map((item) => (
-              <label key={item} className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id={item}
-                  checked={sidebardata[item]}
-                  onChange={handleChange}
-                />
-                {item}
-              </label>
-            ))}
-          </div>
-
-          {/* SORT */}
-          <select
-            id="sort_order"
-            onChange={handleChange}
-            className="border p-3 rounded-lg"
+      {/* TYPE */}
+      <div className="flex flex-wrap gap-2">
+        {['all', 'rent', 'sale'].map((type) => (
+          <button
+            key={type}
+            type="button"
+            onClick={() => setSidebardata({ ...sidebardata, type })}
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border text-sm ${
+              sidebardata.type === type
+                ? 'bg-blue-600 text-white'
+                : ''
+            }`}
           >
-            <option value="regularPrice_desc">Price high → low</option>
-            <option value="regularPrice_asc">Price low → high</option>
-            <option value="createdAt_desc">Latest</option>
-            <option value="createdAt_asc">Oldest</option>
-          </select>
-
-          <button className="bg-blue-600 text-white p-3 rounded-lg font-semibold">
-            Apply Filters
+            {type}
           </button>
-
-        </form>
+        ))}
       </div>
 
-      {/* 🔥 RESULTS */}
-      <div className="flex-1 p-6">
-
-        <h1 className="text-2xl font-bold mb-6">
-          Listing Results
-        </h1>
-
-        {loading && <p className="text-center">Loading...</p>}
-
-        {!loading && listings.length === 0 && (
-          <p className="text-center text-gray-500">
-            No listings found 😔
-          </p>
-        )}
-
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {!loading &&
-            listings.map((listing) => (
-              <ListingItem key={listing._id} listing={listing} />
-            ))}
-        </div>
-
-        {showMore && (
-          <div className="text-center mt-6">
-            <button
-              onClick={onShowMoreClick}
-              className="bg-gray-800 text-white px-6 py-2 rounded-lg"
-            >
-              Show More
-            </button>
-          </div>
-        )}
+      {/* AMENITIES */}
+      <div className="flex flex-wrap gap-3 sm:gap-4 text-sm">
+        {['parking', 'furnished', 'offer'].map((item) => (
+          <label key={item} className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id={item}
+              checked={sidebardata[item]}
+              onChange={handleChange}
+            />
+            {item}
+          </label>
+        ))}
       </div>
+
+      {/* SORT */}
+      <select
+        id="sort_order"
+        onChange={handleChange}
+        className="border p-2.5 sm:p-3 rounded-lg text-sm sm:text-base"
+      >
+        <option value="regularPrice_desc">Price high → low</option>
+        <option value="regularPrice_asc">Price low → high</option>
+        <option value="createdAt_desc">Latest</option>
+        <option value="createdAt_asc">Oldest</option>
+      </select>
+
+      <button className="bg-blue-600 text-white p-2.5 sm:p-3 rounded-lg font-semibold text-sm sm:text-base">
+        Apply Filters
+      </button>
+
+    </form>
+  </div>
+
+  {/* 🔥 RESULTS */}
+  <div className="flex-1 p-4 sm:p-6">
+
+    <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
+      Listing Results
+    </h1>
+
+    {loading && <p className="text-center text-sm sm:text-base">Loading...</p>}
+
+    {!loading && listings.length === 0 && (
+      <p className="text-center text-gray-500 text-sm sm:text-base">
+        No listings found 😔
+      </p>
+    )}
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+      {!loading &&
+        listings.map((listing) => (
+          <ListingItem key={listing._id} listing={listing} />
+        ))}
     </div>
+
+    {showMore && (
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={onShowMoreClick}
+          className="bg-gray-800 text-white px-5 sm:px-6 py-2 rounded-lg text-sm sm:text-base"
+        >
+          Show More
+        </button>
+      </div>
+    )}
+  </div>
+</div>
   );
 };
