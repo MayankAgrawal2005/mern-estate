@@ -15,6 +15,7 @@ const userSlice =createSlice({
     reducers:{
         signInStart:(state)=>{
             state.loading=true;
+            state.error=null;
             // action we get from database
         },signInSuccess:(state,action)=>{
             console.log('Reducer received payload:', action.payload);

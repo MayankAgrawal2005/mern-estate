@@ -1,59 +1,82 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import {MdLocationOn} from 'react-icons/md';
-import { list } from 'postcss';
-export const ListingItem = ({listing}) => {
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { MdLocationOn } from 'react-icons/md';
+import { FaBed, FaBath } from 'react-icons/fa';
+
+export const ListingItem = ({ listing }) => {
   return (
-
-
-    <div className='bg-white shadow-md hover:shadow-lg 
-    transition-shadow overflow-hidden rounded-lg w-full  sm:w-[330px] '>
-    
     <Link to={`/listing/${listing._id}`}>
-    
-    <img src={listing.imageUrls[0]} alt='listing cover'
-        className='h-[320px] sm:h-[220px] w-full 
-        object-cover hover:scale-105 transation-scale duration-300'
-    />
 
-    <div className='p-3 flex flex-col gap-2 w-full '>
-        <p className=' truncate text-lg font-semibold text-slate-700 '>{listing.name}</p>
+      <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 group">
 
-        <div className='flex items-center gap-1'>
-            <MdLocationOn className='h-4 w-4 text-green-700'/>
-           <p className='truncate text-sm text-gray-600 w-full'>{listing.address}</p> 
+        {/* 🔥 IMAGE */}
+        <div className="relative overflow-hidden">
+
+          <img
+            src={listing.imageUrls?.[0] || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c'}
+            alt="listing"
+            className="h-[250px] w-full object-cover group-hover:scale-110 transition duration-500"
+          />
+
+          {/* 🔥 OVERLAY */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+          {/* 🔥 PRICE BADGE */}
+          <div className="absolute bottom-3 left-3 text-white font-semibold text-lg">
+            ₹ {listing.offer
+              ? listing.discountPrice.toLocaleString()
+              : listing.regularPrice.toLocaleString()}
+            {listing.type === 'rent' && ' / mo'}
+          </div>
+
+          {/* 🔥 OFFER BADGE */}
+          {listing.offer && (
+            <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 text-xs rounded-lg shadow">
+              OFFER
+            </div>
+          )}
+
         </div>
 
-        <p className='text-sm text-grey-600 line-clamp-2 '>
+        {/* 🔥 CONTENT */}
+        <div className="p-4 flex flex-col gap-2">
+
+          {/* TITLE */}
+          <h3 className="text-lg font-semibold text-gray-800 truncate">
+            {listing.name}
+          </h3>
+
+          {/* LOCATION */}
+          <div className="flex items-center gap-1 text-sm text-gray-500">
+            <MdLocationOn className="text-green-600" />
+            <span className="truncate">{listing.address}</span>
+          </div>
+
+          {/* DESCRIPTION */}
+          <p className="text-sm text-gray-600 line-clamp-2">
             {listing.description}
-        </p>
+          </p>
 
-        <p className='text-slate-500 mt-2 font-semibold  '> $
-        {listing.offer ? listing.discountPrice.toLocaleString('en-US')
-        :listing.regularPrice.toLocaleString('en-US')}
+          {/* FEATURES */}
+          <div className="flex justify-between mt-2 text-sm font-medium text-gray-700">
 
-        {listing.type==='rent' && '/month'}
+            <div className="flex items-center gap-1">
+              <FaBed />
+              {listing.bedrooms}
+            </div>
 
+            <div className="flex items-center gap-1">
+              <FaBath />
+              {listing.bathrooms}
+            </div>
 
-        </p>
+          </div>
 
-<div className='text-slate-700 flex gap-4 '>
-    <div className='font-bold text-xs '>
-        {listing.bedrooms>1 ? `${listing.bedrooms} beds`:`${listing.bedrooms} bed`}
-    </div>
+        </div>
 
-    <div className='font-bold text-xs '>
-        {listing.bathrooms>1 ? `${listing.bathrooms} baths`:`${listing.bedrooms} bath`}
-    </div>
-
-
-</div>
-   </div>
-
-    
-
+      </div>
 
     </Link>
-    </div>
-  )
-}
+  );
+};

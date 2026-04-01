@@ -1,93 +1,97 @@
-import React, { useState,useEffect } from 'react'
+
+import React, { useState, useEffect } from 'react';
 import { FaSearch } from "react-icons/fa";
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 export default function Header() {
-  const {currentUser} = useSelector(state=>state.user);
-  const [searchTerm,setSearchTerm]=useState('');
+  const { currentUser } = useSelector(state => state.user);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
-   const handleSubmit = (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
-     const urlParams = new URLSearchParams(window.location.search);
 
-     urlParams.set('searchTerm',searchTerm);
+    const urlParams = new URLSearchParams();
+    if (searchTerm) {
+      urlParams.set('searchTerm', searchTerm);
+    }
 
-     const searchQuery = urlParams.toString();
+    navigate(`/search?${urlParams.toString()}`);
+  };
 
-     navigate(`/search?${searchQuery}`)
-     
-   }
-   useEffect(()=>{
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get('searchTerm');
 
-     const urlParams = new URLSearchParams(window.location.search);
-     const searchTermFromUrl = urlParams.get('searchTerm');
-
-     if(searchTermFromUrl){
+    if (searchTermFromUrl) {
       setSearchTerm(searchTermFromUrl);
-     }
-
-
-   },[location.search])
+    }
+  }, [location.search]);
 
   return (
+    <header className="sticky top-0 z-50 backdrop-blur-lg bg-white/70 border-b shadow-sm">
+      
+      <div className="flex flex-wrap justify-between items-center max-w-6xl mx-auto p-3 sm:p-4 gap-3">
 
-    <div className='bg-slate-200 shadow-md '>
-      <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
-        <Link to='/'>
-        <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
-            <span className='text-[#64748B]'>Sahand</span>
-            <span className='text-[#334155]'>Estate</span>
-        </h1>
+        {/* 🔥 LOGO */}
+        <Link to="/">
+          <h1 className="font-bold text-lg sm:text-xl flex items-center gap-1 whitespace-nowrap">
+            <span className="text-blue-600">Mayank</span>
+            <span className="text-gray-800">Estate</span>
+          </h1>
         </Link>
 
-        <form onSubmit={handleSubmit} className='bg-slate-100 p-3 rounded-lg flex items-center'>
-
-
-            <input type="text" placeholder=' Search ...' 
-            className='bg-transparent focus:outline-none
-             w-24 sm:w-64'
-             value={searchTerm}
-             onChange={(e)=>setSearchTerm(e.target.value)} />
-
-             <button> <FaSearch className='text-slate-600'/></button>
-
-           
-
+        {/* 🔥 SEARCH BAR (Responsive) */}
+        <form
+          onSubmit={handleSubmit}
+          className="flex items-center bg-gray-100 rounded-full px-3 py-2 shadow-inner w-full sm:w-[40%]"
+        >
+          <input
+            type="text"
+            placeholder="Search..."
+            className="bg-transparent flex-1 focus:outline-none text-sm"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button>
+            <FaSearch className="text-gray-600 hover:text-blue-600 transition" />
+          </button>
         </form>
 
-        <ul className='flex gap-4 '>
-           
-           <Link to='/'>
-           <li className='hidden sm:inline text-slate-700 hover:underline'>
-            Home
+        {/* 🔥 RIGHT SIDE */}
+        <ul className="flex items-center gap-4 sm:gap-6 text-sm font-medium">
+
+          <Link to="/">
+            <li className="hidden sm:inline text-gray-700 hover:text-blue-600 transition">
+              Home
             </li>
-            </Link>
+          </Link>
 
-            <Link to='/about'> 
-            <li className='hidden sm:inline text-slate-700 hover:underline'>
-            About
+          <Link to="/about">
+            <li className="hidden sm:inline text-gray-700 hover:text-blue-600 transition">
+              About
             </li>
-            </Link>
+          </Link>
 
+          {/* 🔥 PROFILE */}
+          <Link to="/profile">
+            {currentUser ? (
+              <img
+                className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover border-2 border-blue-500 hover:scale-105 transition"
+                src={currentUser.avatar}
+                alt="profile"
+              />
+            ) : (
+              <li className="bg-blue-600 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-full hover:bg-blue-700 transition text-xs sm:text-sm">
+                Sign In
+              </li>
+            )}
+          </Link>
 
-            <Link to='/profile'>
-           {currentUser ? ( 
-                <img className='rounded-full h-7 w-7 object-cover' src={currentUser.avatar} alt='profile'/>
-           ):( 
-           
-            <li className='text-slate-700 hover:underline'>  Sign in</li>
-            
-           )
-           }
-           </Link> 
-
-            
         </ul>
-    </div>
-        
-    </div>
-  )     
+      </div>
+    </header>
+  );
 }

@@ -1,110 +1,122 @@
-import React, { useState } from 'react';
-import {Link }from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-// ye bhi redux ka part hai dispatch
+
+
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { signInStart,signInFailure,signInSuccess } from '../redux/user/userSlice';
+import { signInStart, signInFailure, signInSuccess } from '../redux/user/userSlice';
 import { OAuth } from '../components/OAuth';
 
 export default function Signin() {
- 
-  const [formData,setformData] = useState({});
-  //  const [error,setError]= useState(null);
-  //  const [loading,setloading]=useState(false);
-  const {loading,error} = useSelector((state)=>state.user);
-  // isme user vo hai jo name createslice mai name rakha tha
-   const navigate = useNavigate();
-   // dispatch redux ka part hai'
+  const [formData, setFormData] = useState({});
+  const { loading, error } = useSelector((state) => state.user);
 
-   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleChange=(e)=>{
-
-     setformData(
-      {
-        ...formData ,
-        [e.target.id]:e.target.value,
-      }
-     );
-
-     
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
   };
 
-  const handleSubmit = async (e)=>{
-     e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-     try{
-
-      // setloading(true); iski jagah redux use karenge
+    try {
       dispatch(signInStart());
-     const res = await fetch('/api/auth/signin',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-      },
-      body:JSON.stringify(formData),
-     });
 
-      // loading
-     const data = await res.json();
-     console.log("data is ",data);
-     if(data.success===false){
-      // setloading(false);
-      // setError(data.message);
-      // in this place redux is use
-      dispatch(signInFailure(data.message));
-      return;
-     }
+      const res = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-// loading
-      // setloading(false);
-      // setError(null);
-      // yha bhi redux is use
+      const data = await res.json();
+
+      if (!res.ok || data.success === false) {
+        dispatch(signInFailure(data.message || 'Sign in failed'));
+        return;
+      }
+
       dispatch(signInSuccess(data));
-     console.log(data);
-     navigate('/');
-
-     }
-     catch(error){
-      // setloading(false);
-      // setError(error.message);
-      // yha bhi redux use
+      navigate('/');
+    } catch (error) {
       dispatch(signInFailure(error.message));
-     }
-     
-
+    }
   };
 
-console.log(formData);
+  useEffect(() => {
+    dispatch(signInFailure(null)); // clear error on load
+  }, []);
+
   return (
-    <div className='p-3 max-w-lg mx-auto'>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
 
- <h1 className='text-3xl text-center font-semibold my-7'>Sign In</h1>
+      <div className="flex flex-col md:flex-row bg-white shadow-xl rounded-2xl overflow-hidden max-w-4xl w-full">
 
-   <form  onSubmit={handleSubmit} className='flex flex-col gap-4 '>
-      
-      <input type='email' placeholder='email ' 
-      className='border p-3 rounded-lg' id='email' onChange={handleChange}/>
-      <input type='password' placeholder='password ' 
-      className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
+        {/* 🔥 LEFT IMAGE */}
+        <div className="hidden md:block md:w-1/2">
+          <img
+            src="https://images.unsplash.com/photo-1560518883-ce09059eeffa"
+            alt="signin"
+            className="h-full w-full object-cover"
+          />
+        </div>
 
-      <button disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg 
-       uppercase hover:opacity-95 disabled:opacity-80'>
-      {loading ? 'Loading...': 'Sign In'}
-       </button>
+        {/* 🔥 RIGHT FORM */}
+        <div className="p-8 w-full md:w-1/2">
 
-       <OAuth/>
+          <h1 className="text-3xl font-bold text-center mb-6">
+            Welcome Back 👋
+          </h1>
 
- </form>
- <div className='flex gap-2 mt-5'>
-  <p> Don`t Have an account</p>
-  <Link to='/sign-up'>
-    <span className='text-blue-700'>Sign up</span>
-  </Link>
- </div>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
+            <input
+              type="email"
+              id="email"
+              placeholder="Email"
+              onChange={handleChange}
+              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            />
 
-{error && <p className='text-red-500 mt-5' >{error}</p>}
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              onChange={handleChange}
+              className="border p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+
+            <button
+              disabled={loading}
+              className="bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
+
+            <OAuth />
+
+          </form>
+
+          {/* SIGNUP LINK */}
+          <div className="flex gap-2 mt-6 justify-center text-sm">
+            <p>Don’t have an account?</p>
+            <Link to="/sign-up" className="text-blue-600 hover:underline">
+              Sign up
+            </Link>
+          </div>
+
+          {/* ERROR */}
+          {error && (
+            <p className="text-red-500 mt-4 text-center">
+              {error}
+            </p>
+          )}
+
+        </div>
+      </div>
     </div>
-  )
+  );
 }

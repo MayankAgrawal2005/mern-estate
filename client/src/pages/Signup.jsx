@@ -1,92 +1,129 @@
+
+
+
 import React, { useState } from 'react';
-import {Link }from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { OAuth } from '../components/OAuth';
+
 export default function Signup() {
- 
-  const [formData,setformData] = useState({});
-   const [error,setError]= useState(null);
-   const [loading,setloading]=useState(false);
-   const navigate = useNavigate();
-  const handleChange=(e)=>{
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-     setformData(
-      {
-        ...formData ,
-        [e.target.id]:e.target.value,
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        setLoading(false);
+        setError(data.message);
+        return;
       }
-     );
 
-     
-  };
-
-  const handleSubmit = async (e)=>{
-     e.preventDefault();
-
-     try{
-      setloading(true);
-     const res = await fetch('/api/auth/signup',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-      },
-      body:JSON.stringify(formData),
-     });
-
-      // loading
-     const data = await res.json();
-     if(data.success===false){
-      setloading(false);
-      setError(data.message);
-    
-      return;
-     }
-
-// loading
-      setloading(false);
+      setLoading(false);
       setError(null);
-     console.log(data);
-     navigate('/sign-in');
+      navigate('/sign-in');
 
-     }
-     catch(error){
-      setloading(false);
+    } catch (error) {
+      setLoading(false);
       setError(error.message);
-     }
-     
-
+    }
   };
 
-console.log(formData);
   return (
-    <div className='p-3 max-w-lg mx-auto'>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-3 sm:px-4">
 
- <h1 className='text-3xl text-center font-semibold my-7'>Sign up</h1>
+      <div className="flex flex-col md:flex-row bg-white shadow-xl rounded-2xl overflow-hidden max-w-4xl w-full">
 
-   <form  onSubmit={handleSubmit} className='flex flex-col gap-4 '>
-      <input type='text' placeholder='username ' 
-      className='border p-3 rounded-lg' id='username' onChange={handleChange}/>
-      <input type='email' placeholder='email ' 
-      className='border p-3 rounded-lg' id='email' onChange={handleChange}/>
-      <input type='password' placeholder='password ' 
-      className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
+        {/* 🔥 LEFT IMAGE */}
+        <div className="hidden md:block md:w-1/2">
+          <img
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"
+            alt="signup"
+            className="h-full w-full object-cover"
+          />
+        </div>
 
-      <button disabled={loading} className='bg-slate-700 text-white p-3 rounded-lg 
-       uppercase hover:opacity-95 disabled:opacity-80'>
-      {loading ? 'Loading...': 'Sign Up'}
-       </button>
-       <OAuth/>
+        {/* 🔥 RIGHT FORM */}
+        <div className="p-5 sm:p-6 md:p-8 w-full md:w-1/2">
 
- </form>
- <div className='flex gap-2 mt-5'>
-  <p>Have an account?</p>
-  <Link to='/sign-in'>
-    <span className='text-blue-700'>Sign in</span>
-  </Link>
- </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-5 sm:mb-6">
+            Create Account 🚀
+          </h1>
 
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:gap-4">
 
-{error && <p className='text-red-500 mt-5' >{error}</p>}
+            <input
+              type="text"
+              id="username"
+              placeholder="Username"
+              onChange={handleChange}
+              className="border p-2.5 sm:p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base"
+            />
+
+            <input
+              type="email"
+              id="email"
+              placeholder="Email"
+              onChange={handleChange}
+              className="border p-2.5 sm:p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base"
+            />
+
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              onChange={handleChange}
+              className="border p-2.5 sm:p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm sm:text-base"
+            />
+
+            <button
+              disabled={loading}
+              className="bg-blue-600 text-white p-2.5 sm:p-3 rounded-lg font-semibold hover:bg-blue-700 transition text-sm sm:text-base"
+            >
+              {loading ? 'Creating Account...' : 'Sign Up'}
+            </button>
+
+            {/* OAuth */}
+            <OAuth />
+
+          </form>
+
+          {/* SIGN IN LINK */}
+          <div className="flex gap-2 mt-5 sm:mt-6 justify-center text-xs sm:text-sm">
+            <p>Already have an account?</p>
+            <Link to="/sign-in" className="text-blue-600 hover:underline">
+              Sign in
+            </Link>
+          </div>
+
+          {/* ERROR */}
+          {error && (
+            <p className="text-red-500 mt-3 sm:mt-4 text-center text-sm">
+              {error}
+            </p>
+          )}
+
+        </div>
+      </div>
     </div>
-  )
+  );
 }
