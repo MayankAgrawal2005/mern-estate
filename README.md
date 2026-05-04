@@ -73,10 +73,7 @@ Create a `.env` file in the **root** directory:
 MONGO = your_mongodb_connection_string
 JWT_SECRET = your_jwt_secret
 
-# Note: The following are present in the project but not currently implemented in the logic:
-# MAIL_HOST = smtp.gmail.com
-# EMAIL = your_email@gmail.com
-# EMAIL_PASSWORD = your_app_password
+
 
 ```
 
